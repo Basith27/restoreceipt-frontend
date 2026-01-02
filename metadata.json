@@ -1,0 +1,7 @@
+{
+  "name": "RestoReceipt",
+  "description": "AI-powered receipt parser and expense management specifically designed for multi-outlet restaurant businesses. Features mobile capture, desktop verification, and accounting integration.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
