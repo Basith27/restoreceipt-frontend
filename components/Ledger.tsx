@@ -50,6 +50,7 @@ export const Ledger: React.FC<LedgerProps> = ({ receipts, onReviewClick }) => {
                 <th className="p-4 font-semibold text-slate-500 uppercase text-xs tracking-wider">Category</th>
                 <th className="p-4 font-semibold text-slate-500 uppercase text-xs tracking-wider text-right">Tax</th>
                 <th className="p-4 font-semibold text-slate-500 uppercase text-xs tracking-wider text-right">Total</th>
+                <th className="p-4 font-semibold text-slate-500 uppercase text-xs tracking-wider">Confidence</th>
                 <th className="p-4 font-semibold text-slate-500 uppercase text-xs tracking-wider">Status</th>
                 <th className="p-4 w-20"></th>
               </tr>
@@ -72,8 +73,11 @@ export const Ledger: React.FC<LedgerProps> = ({ receipts, onReviewClick }) => {
                       {r.category}
                     </span>
                   </td>
-                  <td className="p-4 text-right text-slate-500 font-medium">${r.taxAmount?.toFixed(2) || '0.00'}</td>
-                  <td className="p-4 text-right font-bold text-slate-900 text-base">${r.totalAmount.toFixed(2)}</td>
+                  <td className="p-4 text-right text-slate-500 font-medium">{r.currency || '$'}{r.taxAmount?.toFixed(2) || '0.00'}</td>
+                  <td className="p-4 text-right font-bold text-slate-900 text-base">{r.currency || '$'}{r.totalAmount.toFixed(2)}</td>
+                  <td className={`p-4 text-right text-slate-500 font-bold ${r.confidence >= 90 ? 'text-emerald-600' : 'text-orange-600'}`}>
+                    {r.confidence}%
+                  </td>
                   <td className="p-4">
                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold
                        ${r.status === ReceiptStatus.APPROVED ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : 

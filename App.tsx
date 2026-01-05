@@ -52,17 +52,17 @@ function App() {
       vendorName: data.vendorName || 'Unknown Vendor',
       totalAmount: data.totalAmount || 0,
       date: data.date || new Date().toISOString().split('T')[0],
-      category: data.category || 'Uncategorized',
-      taxAmount: data.taxAmount || 0,
-      status: ReceiptStatus.NEEDS_REVIEW, // Always review newly captured
       imageUrl: image,
-      confidence: data.confidence || 50,
-      items: data.items || [],
       uploadedBy: 'You',
       fileType: fileType,
-    };
+      category: data.category || 'Uncategorized',
+      status: data.status || ReceiptStatus.NEEDS_REVIEW,
+      confidence: data.confidence || 50,
+      taxAmount: data.taxAmount || 0,
+      items: data.items || [],
+      currency: data.currency || '$'
+    }
     
-    // Go straight to verifier
     setActiveReceipt(newReceipt);
     setCurrentView(AppView.VERIFIER);
   };
@@ -120,6 +120,8 @@ function App() {
         return <div>View not found</div>;
     }
   };
+
+  console.log(receipts);
 
   return (
     <Layout currentView={currentView} setView={setCurrentView}>

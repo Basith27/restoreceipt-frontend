@@ -1,4 +1,5 @@
-import { ReceiptItem, Receipt } from "../types";
+import { log } from "console";
+import { ReceiptItem, Receipt, ReceiptStatus } from "../types";
 
 // The URL of our running Flask API
 const API_URL = "http://127.0.0.1:5000";
@@ -18,6 +19,10 @@ interface ApiResponse {
   items: BackendItem[];
   gstin: [string | null, number];
   hsn: [string | null, number];
+  overall_confidence: number;
+  category: string;
+  status: ReceiptStatus
+  currency: string;  
 }
 
 export const uploadAndParseReceipt = async (file: File): Promise<Partial<Receipt>> => {
@@ -40,7 +45,6 @@ export const uploadAndParseReceipt = async (file: File): Promise<Partial<Receipt
 
     // --- IMPORTANT: Data Mapping ---
     // We must map the data from our Python format to the format the frontend expects.
-
     const frontendItems: ReceiptItem[] = backendData.items.map(item => ({
         name: item.description?.[0] || 'N/A',
         price: item.total_price?.[0] || 0,
@@ -53,9 +57,11 @@ export const uploadAndParseReceipt = async (file: File): Promise<Partial<Receipt
       taxAmount: backendData.tax_amount?.[0] || 0,
       date: backendData.transaction_date?.[0],
       items: frontendItems,
-      confidence: backendData.gstin?.[1] || 50, 
+      confidence: backendData.overall_confidence,
+      category: backendData.category,
+      status: backendData.status,
+      currency: backendData.currency || '₹',
     };
-
     return frontendData;
 
   } catch (error) {

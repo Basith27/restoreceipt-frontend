@@ -33,10 +33,11 @@ export interface Receipt {
   taxAmount: number;
   status: ReceiptStatus;
   imageUrl: string;
-  confidence: number; // 0 to 100
+  confidence: number;
   items?: ReceiptItem[];
   uploadedBy: string;
   fileType?: string;
+  currency?: string;
 }
 
 export interface Outlet {

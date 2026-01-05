@@ -58,6 +58,7 @@ export const Capture: React.FC<CaptureProps> = ({ onCaptureComplete, onBatchComp
         });
 
         const extractedData = await uploadAndParseReceipt(uploadedFile.file);
+        console.log(extractedData)
         
         // Create the new receipt object
         const newReceipt: Receipt = {
@@ -65,12 +66,13 @@ export const Capture: React.FC<CaptureProps> = ({ onCaptureComplete, onBatchComp
           vendorName: extractedData.vendorName || 'Unknown Vendor',
           totalAmount: extractedData.totalAmount || 0,
           date: extractedData.date || new Date().toISOString().split('T')[0],
-          category: 'Uncategorized',
+          category: extractedData.category || 'Uncategorized',
           taxAmount: extractedData.taxAmount || 0,
-          status: ReceiptStatus.NEEDS_REVIEW,
+          status: extractedData.status || ReceiptStatus.NEEDS_REVIEW, 
           imageUrl,
           confidence: extractedData.confidence || 50,
           items: extractedData.items || [],
+          currency: extractedData.currency || '$',
           uploadedBy: 'You'
         };
         newReceipts.push(newReceipt);
@@ -115,6 +117,7 @@ export const Capture: React.FC<CaptureProps> = ({ onCaptureComplete, onBatchComp
             reader.readAsDataURL(file);
         });
         const extractedData = await uploadAndParseReceipt(file);
+        
         // onCaptureComplete will navigate away, so we don't need to set processing to false in the success case
         onCaptureComplete(extractedData, imageUrl, file.type);
     } catch (err) {

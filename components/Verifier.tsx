@@ -134,7 +134,7 @@ export const Verifier: React.FC<VerifierProps> = ({ receipt: initialReceipt, onS
             <div className="grid grid-cols-2 gap-4">
               <InputGroup label="Total Amount" warning={isLowConfidence('total')}>
                 <div className="flex items-center gap-1">
-                  <span className="text-lg font-medium text-slate-400">$</span>
+                  <span className="text-lg font-medium text-slate-400">{receipt.currency || '$'}</span>
                   <input 
                     type="number" 
                     value={receipt.totalAmount} 
@@ -145,7 +145,7 @@ export const Verifier: React.FC<VerifierProps> = ({ receipt: initialReceipt, onS
               </InputGroup>
               <InputGroup label="Tax Amount">
                  <div className="flex items-center gap-1">
-                  <span className="text-base font-medium text-slate-400">$</span>
+                  <span className="text-base font-medium text-slate-400">{receipt.currency || '$'}</span>
                   <input 
                     type="number" 
                     value={receipt.taxAmount} 
