@@ -63,8 +63,9 @@ function App() {
       currency: data.currency || '$'
     }
     
-    setActiveReceipt(newReceipt);
-    setCurrentView(AppView.VERIFIER);
+    // setActiveReceipt(newReceipt);
+    setReceipts(prev => [newReceipt, ...prev]);
+    setCurrentView(AppView.LEDGER);
   };
 
   const handleBatchComplete = (newReceipts: Receipt[]) => {
@@ -90,6 +91,17 @@ function App() {
     setCurrentView(AppView.VERIFIER);
   };
 
+  const handleRejectReceipt = (id: string) => {
+    setReceipts(prev => prev.filter(r => r.id !== id));
+    setActiveReceipt(null);
+    setCurrentView(AppView.LEDGER);
+  };
+
+  const handleCancelReview = () => {
+    setActiveReceipt(null);
+    setCurrentView(AppView.LEDGER);
+  };
+
   const renderContent = () => {
     switch (currentView) {
       case AppView.DASHBOARD:
@@ -106,11 +118,8 @@ function App() {
         return <Verifier 
           receipt={activeReceipt} 
           onSave={handleSaveReceipt}
-          onReject={(id) => {
-            setReceipts(prev => prev.filter(r => r.id !== id));
-            setCurrentView(AppView.DASHBOARD);
-          }}
-          onCancel={() => setCurrentView(AppView.DASHBOARD)}
+          onReject={handleRejectReceipt}
+          onCancel={handleCancelReview}
         />;
       case AppView.LEDGER:
         return <Ledger receipts={receipts} onReviewClick={handleReviewClick} />;
