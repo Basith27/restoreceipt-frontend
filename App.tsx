@@ -50,6 +50,8 @@ function App() {
     const newReceipt: Receipt = {
       id: Date.now().toString(),
       vendorName: data.vendorName || 'Unknown Vendor',
+      vendorAddress: data.vendorAddress || '',
+      gstin: data.gstin || '',
       totalAmount: data.totalAmount || 0,
       date: data.date || new Date().toISOString().split('T')[0],
       imageUrl: image,
@@ -124,7 +126,7 @@ function App() {
       case AppView.LEDGER:
         return <Ledger receipts={receipts} onReviewClick={handleReviewClick} />;
       case AppView.EXPORT:
-        return <Export />;
+        return <Export receipts={receipts} />;
       default:
         return <div>View not found</div>;
     }

@@ -131,6 +131,25 @@ export const Verifier: React.FC<VerifierProps> = ({ receipt: initialReceipt, onS
               />
             </InputGroup>
 
+            <InputGroup label="Merchant Address">
+              <textarea 
+                value={receipt.vendorAddress} 
+                onChange={(e) => handleChange('vendorAddress', e.target.value)}
+                className="w-full text-sm font-medium text-slate-700 bg-transparent border-0 border-b border-slate-200 focus:border-orange-500 focus:ring-0 px-0 py-1 resize-none"
+                rows={2}
+              />
+            </InputGroup>
+
+            <InputGroup label="GSTIN Number">
+              <input 
+                type="text" 
+                value={receipt.gstin} 
+                onChange={(e) => handleChange('gstin', e.target.value.toUpperCase())}
+                className="w-full text-sm font-mono font-bold text-slate-900 bg-transparent border-0 border-b border-slate-200 focus:border-orange-500 focus:ring-0 px-0 py-1"
+                placeholder="e.g. 32AAACM9878K1ZY"
+              />
+            </InputGroup>
+
             <div className="grid grid-cols-2 gap-4">
               <InputGroup label="Total Amount" warning={isLowConfidence('total')}>
                 <div className="flex items-center gap-1">

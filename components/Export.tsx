@@ -10,8 +10,12 @@ const MOCK_RECEIPTS_DB: Receipt[] = [
     { id: '3', vendorName: 'Office Supplies Inc.', totalAmount: 150.75, date: '2025-10-26', category: 'Maintenance', status: ReceiptStatus.APPROVED, imageUrl: '', confidence: 99, uploadedBy: '', taxAmount: 15.00 }
 ];
 
-export const Export: React.FC = () => {
-  const approvedReceipts = useMemo(() => MOCK_RECEIPTS_DB.filter(r => r.status === ReceiptStatus.APPROVED), [MOCK_RECEIPTS_DB]);
+interface ExportProps {
+  receipts: Receipt[];
+}
+
+export const Export: React.FC<ExportProps> = ({ receipts }) => {
+  const approvedReceipts = useMemo(() => receipts.filter(r => r.status === ReceiptStatus.APPROVED), [receipts]);
   
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [showConfig, setShowConfig] = useState(false);
@@ -19,8 +23,7 @@ export const Export: React.FC = () => {
   const [filename, setFilename] = useState('');
   const [isExporting, setIsExporting] = useState(false);
 
-  // --- THIS IS THE FIX ---
-  // Step 2: This useEffect hook will run whenever the `format` or `showConfig` state changes.
+  //This useEffect hook will run whenever the `format` or `showConfig` state changes.
   useEffect(() => {
     // Only generate a filename if the config panel is visible
     if (showConfig) {
@@ -60,9 +63,10 @@ export const Export: React.FC = () => {
     }
     setIsExporting(true);
     try {
-      await exportReceipts(format, Array.from(selectedIds), filename);
+      const dataToExport = approvedReceipts.filter(r => selectedIds.has(r.id));
+      await exportReceipts(format, dataToExport, filename);
     } catch (error) {
-      alert("Could not download export. Please check the console.");
+      alert("Export failed.");
     } finally {
       setIsExporting(false);
     }
@@ -85,18 +89,27 @@ export const Export: React.FC = () => {
                 <thead className="bg-slate-50/50 border-b border-slate-200 sticky top-0">
                     <tr>
                         <th className="p-4 w-12 text-center"><input type="checkbox" checked={isAllSelected} onChange={handleSelectAll} className="rounded border-slate-300 text-orange-600 focus:ring-orange-500" /></th>
-                        <th className="p-4 font-semibold text-slate-500 uppercase text-xs">Date</th>
-                        <th className="p-4 font-semibold text-slate-500 uppercase text-xs">Vendor</th>
-                        <th className="p-4 font-semibold text-slate-500 uppercase text-xs text-right">Amount</th>
+                        <th className="p-4 font-semibold text-slate-500 uppercase text-[12px]">Date</th>
+                        <th className="p-4 font-semibold text-slate-500 uppercase text-[12px]">Vendor & Address</th>
+                        <th className="p-4 font-semibold text-slate-500 uppercase text-[12px]">Category</th>
+                        <th className="p-4 font-semibold text-slate-500 uppercase text-[12px]">GSTIN</th>
+                        <th className="p-4 font-semibold text-slate-500 uppercase text-[12px]">Tax</th>
+                        <th className="p-4 font-semibold text-slate-500 uppercase text-[12px]">Total</th>
                     </tr>
                 </thead>
               <tbody>
                 {approvedReceipts.map(r => (
                   <tr key={r.id} className="hover:bg-slate-50/80 transition-colors">
                     <td className="p-4 text-center"><input type="checkbox" checked={selectedIds.has(r.id)} onChange={() => handleSelectRow(r.id)} className="rounded border-slate-300 text-orange-600 focus:ring-orange-500" /></td>
-                    <td className="p-4 text-slate-500 font-medium">{r.date}</td>
-                    <td className="p-4 font-semibold text-slate-900">{r.vendorName}</td>
-                    <td className="p-4 text-right font-bold text-slate-900">${r.totalAmount.toFixed(2)}</td>
+                    <td className="p-4 text-slate-600">{r.date}</td>
+                    <td className="p-4">
+                      <div className="font-bold text-slate-900">{r.vendorName}</div>
+                      <div className="text-[12px] text-slate-400 truncate max-w-[200px]">{r.vendorAddress || 'No Address'}</div>
+                    </td>
+                    <td className="p-4"><span className="text-xs bg-slate-100 px-2 py-1 rounded">{r.category}</span></td>
+                    <td className="p-4 text-slate-500 font-mono">{r.gstin || 'N/A'}</td>
+                    <td className="p-4 text-slate-600">{r.currency}{r.taxAmount.toFixed(2)}</td>
+                    <td className="p-4 font-bold text-slate-900">{r.currency}{r.totalAmount.toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>

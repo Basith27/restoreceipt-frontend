@@ -48,8 +48,9 @@ export const Ledger: React.FC<LedgerProps> = ({ receipts, onReviewClick }) => {
                 </th>
                 <th className="p-4 font-semibold text-slate-500 uppercase text-xs tracking-wider">Vendor</th>
                 <th className="p-4 font-semibold text-slate-500 uppercase text-xs tracking-wider">Category</th>
-                <th className="p-4 font-semibold text-slate-500 uppercase text-xs tracking-wider text-right">Tax</th>
-                <th className="p-4 font-semibold text-slate-500 uppercase text-xs tracking-wider text-right">Total</th>
+                <th className="p-4 font-semibold text-slate-500 uppercase text-xs tracking-wider">GSTIN</th>
+                <th className="p-4 font-semibold text-slate-500 uppercase text-xs tracking-wider">Tax</th>
+                <th className="p-4 font-semibold text-slate-500 uppercase text-xs tracking-wider">Total</th>
                 <th className="p-4 font-semibold text-slate-500 uppercase text-xs tracking-wider">Confidence</th>
                 <th className="p-4 font-semibold text-slate-500 uppercase text-xs tracking-wider">Status</th>
                 <th className="p-4 w-20"></th>
@@ -62,24 +63,25 @@ export const Ledger: React.FC<LedgerProps> = ({ receipts, onReviewClick }) => {
                   <td className="p-4 text-slate-500 font-medium whitespace-nowrap">{new Date(r.date).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'})}</td>
                   <td className="p-4">
                     <div className="flex items-center gap-3">
-                       <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 font-bold text-xs uppercase">
+                       <div className="w-8 h-8 rounded-md bg-slate-100 flex items-center justify-center text-slate-500 font-bold text-xs uppercase">
                          {r.vendorName.substring(0,2)}
                        </div>
                        <span className="font-semibold text-slate-900">{r.vendorName}</span>
                     </div>
                   </td>
                   <td className="p-4">
-                    <span className="px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-600">
+                    <span className="px-2.5 py-1 rounded-md bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-600">
                       {r.category}
                     </span>
                   </td>
-                  <td className="p-4 text-right text-slate-500 font-medium">{r.currency || '$'}{r.taxAmount?.toFixed(2) || '0.00'}</td>
-                  <td className="p-4 text-right font-bold text-slate-900 text-base">{r.currency || '$'}{r.totalAmount.toFixed(2)}</td>
-                  <td className={`p-4 text-right text-slate-500 font-bold ${r.confidence >= 90 ? 'text-emerald-600' : 'text-orange-600'}`}>
+                  <td className="p-4 text-slate-500 font-mono">{r.gstin || 'N/A'}</td>
+                  <td className="p-4 text-slate-500 font-medium">{r.currency || '$'}{r.taxAmount?.toFixed(2) || '0.00'}</td>
+                  <td className="p-4 font-bold text-slate-900 text-base">{r.currency || '$'}{r.totalAmount.toFixed(2)}</td>
+                  <td className={`p-4 text-slate-500 font-bold ${r.confidence >= 90 ? 'text-emerald-600' : 'text-orange-600'}`}>
                     {r.confidence}%
                   </td>
                   <td className="p-4">
-                     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold
+                     <span className={`inline-flex items-center gap-1.5 px-2.5 py-2 rounded-md text-xs font-bold
                        ${r.status === ReceiptStatus.APPROVED ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' : 
                          r.status === ReceiptStatus.NEEDS_REVIEW ? 'bg-orange-50 text-orange-700 border border-orange-100' : 
                          'bg-red-50 text-red-700 border border-red-100'}`}>

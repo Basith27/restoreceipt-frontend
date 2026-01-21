@@ -13,6 +13,7 @@ interface BackendItem {
 // This is the data structure our Python back-end sends
 interface ApiResponse {
   merchant_name: [string | null, number];
+  vendor_address: [string | null, number];
   transaction_date: [string | null, number];
   total: [number | null, number];
   tax_amount: [number | null, number];
@@ -53,6 +54,7 @@ export const uploadAndParseReceipt = async (file: File): Promise<Partial<Receipt
 
     const frontendData: Partial<Receipt> = {
       vendorName: backendData.merchant_name?.[0],
+      vendorAddress: backendData.vendor_address?.[0] || '',
       totalAmount: backendData.total?.[0] || 0,
       taxAmount: backendData.tax_amount?.[0] || 0,
       date: backendData.transaction_date?.[0],
@@ -61,6 +63,7 @@ export const uploadAndParseReceipt = async (file: File): Promise<Partial<Receipt
       category: backendData.category,
       status: backendData.status,
       currency: backendData.currency || '₹',
+      gstin: backendData.gstin?.[0] || '',
     };
     return frontendData;
 
@@ -72,7 +75,7 @@ export const uploadAndParseReceipt = async (file: File): Promise<Partial<Receipt
 
 export type ExportFormat = 'csv' | 'json' | 'xml';
 
-export const exportReceipts = async (format: ExportFormat, receiptIds: string[], filename: string) => {
+export const exportReceipts = async (format: ExportFormat, receipts: Receipt[], filename: string) => {
   try {
     const response = await fetch(`${API_URL}/export`, {
       method: 'POST',
@@ -81,7 +84,7 @@ export const exportReceipts = async (format: ExportFormat, receiptIds: string[],
       },
       body: JSON.stringify({
         format: format,
-        receipt_ids: receiptIds,
+        data: receipts,
       }),
     });
 

@@ -27,9 +27,11 @@ export interface ReceiptItem {
 export interface Receipt {
   id: string;
   vendorName: string;
+  vendorAddress?: string;
   totalAmount: number;
   date: string;
   category: string;
+  gstin?: string; 
   taxAmount: number;
   status: ReceiptStatus;
   imageUrl: string;
