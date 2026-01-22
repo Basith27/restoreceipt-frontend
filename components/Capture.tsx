@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Upload, CheckCircle2, AlertCircle, Loader2, XCircle, File } from 'lucide-react';
-import { uploadAndParseReceipt } from '../services/apiService';
+import { uploadAndAnalyze } from '../services/receiptService';
 import { Receipt, ReceiptStatus } from '../types';
 
 // Define a new type for tracking the state of each uploaded file in batch mode
@@ -57,7 +57,7 @@ export const Capture: React.FC<CaptureProps> = ({ onCaptureComplete, onBatchComp
             reader.readAsDataURL(uploadedFile.file);
         });
 
-        const extractedData = await uploadAndParseReceipt(uploadedFile.file);
+        const extractedData = await uploadAndAnalyze(uploadedFile.file);
         console.log(extractedData)
         
         // Create the new receipt object
@@ -116,7 +116,7 @@ export const Capture: React.FC<CaptureProps> = ({ onCaptureComplete, onBatchComp
             reader.onloadend = () => resolve(reader.result as string);
             reader.readAsDataURL(file);
         });
-        const extractedData = await uploadAndParseReceipt(file);
+        const extractedData = await uploadAndAnalyze(file);
         
         // onCaptureComplete will navigate away, so we don't need to set processing to false in the success case
         onCaptureComplete(extractedData, imageUrl, file.type);

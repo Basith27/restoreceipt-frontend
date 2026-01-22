@@ -62,7 +62,8 @@ function App() {
       confidence: data.confidence || 50,
       taxAmount: data.taxAmount || 0,
       items: data.items || [],
-      currency: data.currency || '$'
+      currency: data.currency || '₹',
+      extractionSource: data.extractionSource
     }
     
     // setActiveReceipt(newReceipt);

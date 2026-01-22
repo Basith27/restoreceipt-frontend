@@ -40,6 +40,7 @@ export interface Receipt {
   uploadedBy: string;
   fileType?: string;
   currency?: string;
+  extractionSource?: 'Custom-LLM' | 'Azure-DI';
 }
 
 export interface Outlet {
